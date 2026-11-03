@@ -14,7 +14,7 @@ export default function EmptyState({
   showAddButton = false,
 }: EmptyStateProps) {
   return (
-    <div className="bg-white border border-slate-100 rounded-2xl p-12 text-center my-4 flex flex-col items-center justify-center shadow-xs">
+    <div className="bg-white border border-slate-100 rounded-2xl p-12 text-center my-4  flex flex-col items-center justify-center shadow-xs">
       <div className="w-12 h-12 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
         <Users className="w-6 h-6" />
       </div>

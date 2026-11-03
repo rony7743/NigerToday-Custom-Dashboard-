@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GTV NigerToday — Customer & Subscription Management Dashboard
 
-## Getting Started
+A modern, high-performance, and pixel-perfect SaaS frontend built with **Next.js (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS**.
 
-First, run the development server:
+---
 
+## 🎨 Figma Design Origin
+
+This entire frontend application was meticulously crafted **pixel-for-pixel** directly from the official Figma design:
+
+👉 **[View Figma Design (NigerToday Custom Dashboard)](https://www.figma.com/design/2WVTIbLqugYP13WSiyNfVZ/nigertodaynew-%7C%7C-Custom-Dashboard-%7C%7C--380-USD--Copy-?node-id=5-2&p=f&t=DP6tAnxbgbqHLuji-0)**
+
+* **100% Pixel-Perfect:** Exact colors, typography, borders, card geometries, icon alignments, and interactive hover/active states.
+* **Fully Responsive:** Seamlessly adapted from ultra-narrow mobile viewports (280px–360px) all the way up to ultra-wide desktop monitors.
+* **Plug-and-Play Backend Architecture:** Designed with clean decoupled service layers. The frontend is 100% complete and production-ready — simply hook up your backend API endpoints and it runs instantly.
+
+---
+
+## 📸 Screenshots & UI Previews
+
+### 1. Dashboard Overview
+![Dashboard Page](./public/assets/dashboardpage.png)
+
+### 2. Authentication & Login
+![Login Page](./public/assets/loginpage.png)
+
+### 3. Send Reminder & Popups
+![Popup Modal](./public/assets/popuppage.png)
+
+---
+
+## 🚀 Key Features
+
+* **Real-Time Subscription Analytics:**
+  * Total Customers, Active Customers, Expiring Soon, and Expired metrics.
+  * Attention Warning Banners for urgent renewals.
+* **Customer Management (Full CRUD):**
+  * Instant search by customer name, phone number, or email.
+  * Filter tabs: `All`, `Active`, `Expiring`, and `Expired`.
+  * Comprehensive Customer Profile View with subscription timeline and progress bars.
+  * Add Customer & Edit Customer workflows with live auto-calculated expiry dates.
+* **Automated Expiry & Reminder System:**
+  * Quick message templates: `7 days left`, `3 days left`, `1 day left`, and `Expired`.
+  * Direct SMS / Notification trigger + one-click **WhatsApp** dispatch (`wa.me` integration).
+* **Robust Authentication & Security:**
+  * Server-side Next.js Middleware (`middleware.ts`) guarding all dashboard routes.
+  * Unauthenticated users are strictly redirected to `/login`.
+  * Active session persistence via secure cookies and local storage.
+  * Settings & Password change modals with real-time feedback.
+* **Mobile-First & Ultra-Responsive:**
+  * Adaptive Bottom Navigation on mobile with slide-over drawer sidebar.
+  * Zero horizontal scrollbars (`overflow-x: hidden`).
+  * Custom touch targets and optimized padding for mobile users.
+
+---
+
+## 🔌 Backend Integration Guide (Plug & Play)
+
+The frontend data layer is entirely decoupled into two clean service files. To connect your real backend, you **only** need to replace the mock functions in these two files with your `fetch()` or `axios` API calls:
+
+### 1. Customer & Subscription Service (`src/services/customerService.ts`)
+| Function | HTTP Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| `getCustomers()` | `GET` | `/api/customers` | Fetch all customers |
+| `getCustomerById(id)` | `GET` | `/api/customers/:id` | Fetch single customer details |
+| `createCustomer(data)` | `POST` | `/api/customers` | Add a new customer |
+| `updateCustomer(id, data)` | `PUT` | `/api/customers/:id` | Edit customer information |
+| `deleteCustomer(id)` | `DELETE` | `/api/customers/:id` | Remove customer record |
+| `renewCustomer(id, months)` | `POST` | `/api/customers/:id/renew` | Extend customer subscription |
+| `getDashboardStats()` | `GET` | `/api/stats` | Fetch aggregated dashboard counts |
+
+### 2. Authentication Service (`src/services/authService.ts`)
+| Function | HTTP Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| `login({ email, password })` | `POST` | `/api/auth/login` | Authenticate user & return token |
+| `logout()` | `POST` | `/api/auth/logout` | Terminate session & clear tokens |
+| `getCurrentUser()` | `GET` | `/api/auth/me` | Fetch currently authenticated user |
+| `updateProfile(data)` | `PUT` | `/api/auth/profile` | Update account name & email |
+| `changePassword(data)` | `PUT` | `/api/auth/change-password` | Update account password |
+
+> **Note:** All UI components, hooks (`useCustomers`, `useCustomer`, `useAuth`), and Context providers (`CustomerContext`, `AuthContext`) are already fully wired. No frontend components need to be modified when connecting the backend!
+
+---
+
+## 🛠️ Tech Stack
+
+* **Framework:** [Next.js](https://nextjs.org/) (App Router, Server & Client Components)
+* **Language:** [TypeScript](https://www.typescriptlang.org/) (Strict Type Safety)
+* **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **Typography:** Inter (via `next/font`)
+* **Linting & Quality:** ESLint (`next/core-web-vitals`), Prettier-ready
+
+---
+
+## 💻 Getting Started
+
+### 1. Prerequisites
+Ensure you have **Node.js 18+** installed on your system.
+
+### 2. Installation
+Clone the repository and install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/rony7743/NigerToday-Custom-Dashboard-
+cd nigertodaynew
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Build for Production
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 5. Code Quality Check
+```bash
+npx tsc --noEmit    # TypeScript type check (0 errors)
+npm run lint         # ESLint verification (0 errors, 0 warnings)
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 License
+Private & Proprietary — NigerToday TV Subscription Management System.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

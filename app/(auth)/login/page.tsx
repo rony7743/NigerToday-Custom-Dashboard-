@@ -1,16 +1,42 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { User, Lock } from 'lucide-react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { User, Lock, Loader2, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
+import { useAuth } from '@/src/context/AuthContext';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from') || '/';
 
-  const handleLogin = (e: React.FormEvent) => {
+  const { isAuthenticated, login } = useAuth();
+  const [email, setEmail] = useState('owner@email.com');
+  const [password, setPassword] = useState('password123');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // If already authenticated, redirect immediately away from login
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(from);
+    }
+  }, [isAuthenticated, router, from]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/');
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      await login({ email, password });
+      router.replace(from);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed. Please check credentials.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -21,8 +47,7 @@ export default function LoginPage() {
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1593784991095-a205069470b6?q=80&w=1200&auto=format&fit=crop")',
+            backgroundImage: 'url("./assets/login.jpg")',
           }}
         />
         {/* Subtle Overlay to match screenshot readability */}
@@ -36,6 +61,7 @@ export default function LoginPage() {
             width={130}
             height={80}
             className="object-contain"
+            priority
           />
         </div>
 
@@ -94,6 +120,7 @@ export default function LoginPage() {
               width={110}
               height={70}
               className="object-contain"
+              priority
             />
           </div>
 
@@ -104,6 +131,13 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2 text-xs text-red-700">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+              <span>{error}</span>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-slate-700">
@@ -113,6 +147,8 @@ export default function LoginPage() {
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 md:hidden" />
                 <input
                   type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="owner@email.com"
                   className="w-full pl-10 md:pl-4 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition"
                   required
@@ -128,6 +164,8 @@ export default function LoginPage() {
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 md:hidden" />
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   className="w-full pl-10 md:pl-4 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5] transition"
                   required
@@ -146,13 +184,29 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold rounded-xl text-sm shadow-sm transition cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full py-3 bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-60 text-white font-semibold rounded-xl text-sm shadow-sm transition cursor-pointer flex items-center justify-center gap-2"
             >
-              Log in
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Logging in...</span>
+                </>
+              ) : (
+                <span>Log in</span>
+              )}
             </button>
           </form>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

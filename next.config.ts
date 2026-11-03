@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  /* Vercel production options */
+  reactStrictMode: true,
   turbopack: {
     rules: {
       "*.css": {
