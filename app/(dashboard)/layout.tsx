@@ -57,7 +57,7 @@ export default function DashboardLayout({
 
             {/* Main Content Area */}
             <main className="flex-1 min-w-0 w-full md:ml-64 pb-20 md:pb-10 min-h-screen overflow-x-hidden">
-              <div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8 w-full min-w-0">
+              <div className="max-w-10xl mx-auto p-4 sm:p-6 md:p-8 w-full min-w-0">
                 <Suspense fallback={null}>{children}</Suspense>
               </div>
             </main>
