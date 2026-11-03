@@ -22,7 +22,7 @@ This entire frontend application was meticulously crafted **pixel-for-pixel** di
 ![Dashboard Page](./public/assets/dashboardpage.png)
 
 ### 2. Authentication & Login
-![Login Page](./public/assets/loginpage.png)
+![Login Page](./public/assets/loginpage2.png)
 
 ### 3. Send Reminder & Popups
 ![Popup Modal](./public/assets/popuppage.png)
